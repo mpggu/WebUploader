@@ -1,3 +1,19 @@
+function storePassword(password) {
+  if (typeof Storage === "undefined") {
+    return;
+  }
+
+  localStorage.password = password;
+}
+
+function getPassword() {
+  if (typeof Storage === "undefined") {
+    return '';
+  }
+
+  return localStorage.password || '';
+}
+
 function uploadFile(evt) {
   if (window.File && window.FileReader && window.FileList && window.Blob) {
     var file = evt.target.files[0];
@@ -6,7 +22,7 @@ function uploadFile(evt) {
       return alert('Datei konnte nicht geladen werden!');
     }
 
-    var auth = prompt('Passwort bitte! :)');
+    var auth = prompt('Passwort bitte!', getPassword());
 
     var r = new FileReader();
     r.onload = function(e) {
@@ -21,6 +37,9 @@ function uploadFile(evt) {
           return alert('Fehler beim Hochladen der Datei: ' + http.statusText);
         } else if (http.readyState === 4 && http.status === 200) {
           alert('Erfolgreich hochgeldaden');
+          if (!getPassword()) {
+            storePassword(auth);
+          }
         }
       }
 
@@ -31,8 +50,10 @@ function uploadFile(evt) {
       http.send(JSON.stringify({
         vplan: contents
       }));
+
+      document.getElementById('fileinput').value = "";
     }
-    r.readAsText(file, 'ISO-8859-1');
+    return r.readAsText(file, 'ISO-8859-1');
   }
 }
 

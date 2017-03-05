@@ -1,5 +1,5 @@
 function storePassword(password) {
-  if (typeof Storage === "undefined") {
+  if (typeof Storage === 'undefined') {
     return;
   }
 
@@ -7,17 +7,15 @@ function storePassword(password) {
 }
 
 function getPassword() {
-  if (typeof Storage === "undefined") {
+  if (typeof Storage === 'undefined') {
     return '';
   }
 
   return localStorage.password || '';
 }
 
-function uploadFile(evt) {
+function uploadFile(file) {
   if (window.File && window.FileReader && window.FileList && window.Blob) {
-    var file = evt.target.files[0];
-
     if (!file) {
       return alert('Datei konnte nicht geladen werden!');
     }
@@ -57,4 +55,21 @@ function uploadFile(evt) {
   }
 }
 
-document.getElementById('fileinput').addEventListener('change', uploadFile, false);
+document.getElementById('fileinput').addEventListener('change', function(evt) {
+  uploadFile(evt.target.files[0]); 
+}, false);
+
+
+var fileDropper = document.getElementsByClassName('wrapper')[0];
+
+fileDropper.addEventListener('dragover', function (evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'copy';
+});
+
+fileDropper.addEventListener('drop', function(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+  uploadFile(evt.dataTransfer.files[0]);
+});

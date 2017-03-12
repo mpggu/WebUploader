@@ -28,7 +28,7 @@ function uploadFile(file) {
   var r = new FileReader();
   r.onload = function (e) {
     var content = e.target.result;
-    var url = 'http://localhost:6767/api/v1/vplan';
+    var url = 'http://sudocode.me:6767/api/v1/vplan';
 
     $.ajax({
       url: url,
@@ -48,6 +48,8 @@ function uploadFile(file) {
         Authorization: auth
       },
       type: 'POST',
+      cache: false,
+      crossDomain: true
     })
 
     $('#fileinput').value = '';
@@ -58,6 +60,8 @@ function uploadFile(file) {
 }
 
 $(function() {
+  $.support.cors = true;
+
   $('#fileinput')[0].addEventListener('change', function(evt) {
     uploadFile(evt.target.files[0]); 
   });
